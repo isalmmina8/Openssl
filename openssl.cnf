@@ -1,0 +1,84 @@
+[ ca ]
+default_ca = CA_root
+
+[ CA_root ]
+dir = /root/ca/root
+certificate = $dir/certs/ca.crt
+private_key = $dir/private/ca.key
+new_certs_dir = $dir/newcerts
+database = $dir/index.txt
+serial = $dir/serial
+RANDFILE = $dir/private/.rand
+default_days = 3650
+default_md = sha256
+policy = policy_strict
+
+[ policy_strict ]
+countryName = match
+stateOrProvinceName = optional
+organizationName = match
+organizationalUnitName = optional
+commonName = supplied
+emailAddress = optional
+
+[ CA_intermediate ]
+dir = /root/ca/intermediate
+certificate = $dir/certs/intermediate.crt
+private_key = $dir/private/intermediate.key
+new_certs_dir = $dir/newcerts
+database = $dir/index.txt
+serial = $dir/serial
+RANDFILE = $dir/private/.rand
+default_days = 375
+default_md = sha256
+policy = policy_loose
+
+[ policy_loose ]
+countryName = optional
+stateOrProvinceName = optional
+localityName = optional
+organizationName = optional
+organizationalUnitName = optional
+commonName = supplied
+emailAddress = optional
+
+[ req ]
+default_bits = 2048
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]
+countryName = Country Name (2 letter code)
+countryName_default = KZ
+stateOrProvinceName = State or Province Name
+stateOrProvinceName_default = Astana
+localityName = Locality Name
+localityName_default = Astana
+organizationName = Organization Name
+organizationName_default = WS LLC
+organizationalUnitName = Organizational Unit Name
+organizationalUnitName_default = WS CA
+commonName = Common Name
+commonName_max = 64
+
+[ v3_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+
+[ v3_intermediate_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true, pathlen:0
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+
+[ server_cert ]
+authorityKeyIdentifier = keyid,issuer
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = www.dmz.ws.kz
+DNS.2 = mail.dmz.ws.kz
